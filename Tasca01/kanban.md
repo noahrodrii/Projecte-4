@@ -10,4 +10,4 @@ Enllaç al kanban
 
 Backlog creat amb el meu company Lucas per el projecte.
 
-[9-11]<img src="/Tasca01/img/Backlog 9-11.png" width="300">
+<img src="/Tasca01/img/Backlog 9-11.png" width="300">
