@@ -1,0 +1,3 @@
+# Introducció
+
+En aquesta activitat treballarem com a tècnics d'una consultora tecnològica per dissenyar solucions d'emmagatzematge de dades en sistemes Linux i Windows. L'objectiu serà aprendre a configurar sistemes que permetin protegir la informació davant de fallades de disc, garantir la disponibilitat de les dades i ampliar l'espai d'emmagatzematge quan sigui necessari. També documentarem els procediments utilitzant màquines virtuals.
