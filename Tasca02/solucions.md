@@ -81,3 +81,41 @@ Aquesta comanda mostra les metadades del darrer commit juntament amb el *diff* (
 ![Inspecció de HEAD a la terminal](/Projecte-4/Tasca02/img/git_showHEAD.png)
 ![Inspecció de HEAD eina grafica](/Projecte-4/Tasca02/img/feat.png)
 ---
+
+## Part 3: Recuperar versions anteriors del working directory
+
+### 1. Simulació d'un error humà i comprovació d'estat
+
+S'ha editat `00-installer-config.yaml` canviant erròniament el nom de la interfície a `eth0`:
+
+```yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: true
+```
+
+A VS Code el fitxer apareix marcat amb una **`M`** (*Modified*), i executant `git status` es confirma que els canvis estan al *Working Directory* sense preparar:
+
+```bash
+git status
+```
+
+![Estat del repositori amb el fitxer modificat](/Projecte-4/Tasca02/img/modific.png)
+
+### 2. Descartar els canvis (`git revert`)
+
+Per revertir l'error i tornar el fitxer a l'estat exacte del darrer commit, s'ha utilitzat l'opció *Discard Changes* de VS Code (fent clic dret sobre el fitxer a la pestanya de control de codi font) o la comanda equivalent a la terminal:
+
+```bash
+git restore 00-installer-config.yaml
+git status
+```
+
+Un cop executat, el fitxer ha recuperat la interfície `enps03` i `git status` indica *"nothing to commit, working tree clean"*, confirmant que el *Working Directory*, l'*Staging Area* i el repositori estan sincronitzats.
+
+![Estat net després d'executar git reset](/Projecte-4/Tasca02/img/git_status.png)
+
+---
