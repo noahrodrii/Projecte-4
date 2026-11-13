@@ -28,6 +28,57 @@ Per dur a terme aquesta implementació sobre **Zorin OS**, cal disposar d'una m�
    ```bash
    lsblk
    ```
-![check discos](/Projecte-4/Tasca04/img/lsblk.png)
+   ![check discos](/Projecte-4/Tasca04/img/lsblk.png)
+
+---
+
+## Fase 1: Configuració Inicial i Muntatge Persistent
+
+En aquesta primera etapa es connecten **dos discos durs de 10 GB** (`/dev/sdb` i `/dev/sdc`) per construir la base de l'emmagatzematge i automatitzar-ne la disponibilitat en arrencar l'equip.
+
+### 1.1. Inicialització dels Volums Físics i creació del Grup de Volums
+
+1. Prepara els dos discos de 10 GB perquè formin part de l'ecosistema LVM:
+   ```bash
+   sudo pvcreate /dev/sdb /dev/sdc
+   ```
+
+   ![check discos](/Projecte-4/Tasca04/img/lsblk.png)
+   
+2. Crea un grup de volums anomenat `vg_practica` agrupant tots dos discos (generant un espai total aproximat de 20 GB):
+   ```bash
+   sudo vgcreate vg_practica /dev/sdb /dev/sdc
+   ```
+   <br>
+
+   > 🔔 **Comprovació:** Executa `sudo vgs` per veure un resum de l'espai total i lliure del grup, o `sudo vgdisplay` si necessites inspeccionar els detalls tècnics interns (com la mida dels *Physical Extents*).
+
+### 1.2. Creació, Formatació i Muntatge Automàtic del Volum Lògic
+
+1. Crea un primer volum lògic de **6 GB** anomenat `lv_inicial` i dota'l d'un sistema de fitxers `ext4`:
+   ```bash
+   sudo lvcreate -L 6G -n lv_inicial vg_practica
+   sudo mkfs.ext4 /dev/vg_practica/lv_inicial
+   ```
+
+   ![crear volum](/Projecte-4/Tasca04/img/lsblk.png)
+
+2. Crea el directori destí i consulta l'identificador únic (**UUID**) del nou volum:
+   ```bash
+   sudo mkdir -p /mnt/inicial
+   sudo blkid /dev/vg_practica/lv_inicial
+   ```
+
+   ![crear directori](/Projecte-4/Tasca04/img/lsblk.png)
+
+3. Per evitar haver de muntar el volum manualment després de cada reinici, edita l'arxiu `/etc/fstab` (`sudo nano /etc/fstab`) i afegeix-hi la línia següent al final (substituint el valor del teu UUID sense cometes):
+   ```text
+   UUID=el-teu-codi-uuid-aqui  /mnt/inicial  ext4  defaults  0  2
+   ```
+4. Aplica la configuració de muntatge immediatament i verifica que el volum està operatiu:
+   ```bash
+   sudo mount -av
+   df -h /mnt/inicial
+   ```
 
 ---
