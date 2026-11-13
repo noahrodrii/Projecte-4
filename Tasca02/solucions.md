@@ -55,3 +55,29 @@ git commit -m "feat: afegeix configuracio inicial de xarxa amb dhcp a enps03"
 ![commit feat](/Projecte-4/Tasca02/img/feat.png)
 
 ---
+
+## Part 2: L'historial del repositori
+
+### 1. Historial detallat vs. historial resumit
+
+S'han executat les dues variants de `git log` per comparar la informació que ofereixen:
+
+* **`git log`**: Mostra el hash complet (SHA-1) de cada commit, on apunta `HEAD`, l'autor, la data exacta i el missatge complet.
+* **`git log --oneline`**: Mostra una versió compacta d'una sola línia per commit amb els primers 7 caràcters del hash i el títol del missatge, ideal per a una lectura ràpida.
+
+![git log](/Projecte-4/Tasca02/img/git%20log_all.png)
+![git log --oneline](/Projecte-4/Tasca02/img/git_log-oneline.png)
+
+### 2. Inspecció visual i detallada de `HEAD`
+
+Mitjançant l'eina gràfica de VS Code (*Git Graph*) s'ha comprovat la mateixa línia temporal. Per veure els canvis exactes introduïts en l'últim commit (`HEAD`), s'ha executat:
+
+```bash
+git show HEAD
+```
+
+Aquesta comanda mostra les metadades del darrer commit juntament amb el *diff* (les línies afegides en verd amb un `+`).
+
+![Inspecció de HEAD a la terminal](/Projecte-4/Tasca02/img/git_showHEAD.png)
+![Inspecció de HEAD eina grafica](/Projecte-4/Tasca02/img/feat.png)
+---
