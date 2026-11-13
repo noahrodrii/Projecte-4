@@ -7,6 +7,7 @@ En aquesta pràctica es treballa la gestió de l'historial de versions utilitzan
 ---
 
 ## Requeriments previs
+
 Abans de començar l'activitat, s'ha creat el repositori públic `projecte4-tasca02` a GitHub, s'ha clonat en local i s'ha verificat la configuració de la identitat de Git:
 
 ```bash
