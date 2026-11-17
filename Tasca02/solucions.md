@@ -119,3 +119,69 @@ Un cop executat, el fitxer ha recuperat la interfície `enps03` i `git status` i
 ![Estat net després d'executar git reset](/Projecte-4/Tasca02/img/git_status.png)
 
 ---
+
+## Part 4: Recuperar versions anteriors (commits) del repositori
+
+### 1. Evolució de la configuració de xarxa (Commits 3, 4 i 5)
+
+S'han realitzat tres modificacions successives sobre `00-installer-config.yaml`, cadascuna amb el seu respectiu commit:
+
+1. **Tercer commit (IP estàtica a `enps03`):**
+   S'ha desactivat `dhcp4` i s'ha afegit l'adreça estàtica `192.168.1.100/24`, la porta d'enllaç i el DNS `192.168.1.1`:
+   
+   ```bash
+   git add 00-installer-config.yaml
+   git commit -m "feat: configura ip estatica a la interficie enps03"
+   ```
+
+2. **Quart commit (Segona interfície `enps08` amb DHCP):**
+   S'ha afegit la configuració de la segona targeta de xarxa `enps08` en mode automàtic:
+
+   ```bash
+   git add 00-installer-config.yaml
+   git commit -m "feat: afegeix segona interficie enps08 en mode dhcp"
+   ```
+
+3. **Cinquè commit (Correcció de servidor DNS a `8.8.8.8`):**
+   S'ha substituït el servidor DNS inicial pel de Google (`8.8.8.8`):
+
+   ```bash
+   git add 00-installer-config.yaml
+   git commit -m "fix: actualitza el servidor dns de enps03 a 8.8.8.8"
+   ```
+
+Revisant l'historial amb `git log --oneline`, es visualitzen els 5 commits realitzats fins al moment:
+
+![Historial complet amb els 5 commits](/Projecte-4/Tasca02/img/update_3.png)
+
+### 2. Exemple de `git revert`
+
+Per desfer els canvis i tornar a l'estat funcional del segon commit (només `enps03` amb DHCP) sense esborrar l'historial, s'han revertit els commits posteriors:
+
+```bash
+git revert --no-edit HEAD~2..HEAD
+```
+
+Com es pot observar a **Git Graph**, no s'ha esborrat cap commit anterior, sinó que s'ha generat un **nou commit de tipus `Revert`** que aplica els canvis inversos, mantenint intacta la traçabilitat del projecte.
+
+![Nou commit de Revert visualitzat a Git Graph](/Projecte-4/Tasca02/img/revert.png)
+
+### 3. Exploració d'un commit anterior a VS Code
+Seleccionant el **quart commit** (on es va afegir `enps08`) dins l'eina gràfica de VS Code i fent clic sobre el fitxer `00-installer-config.yaml`, s'obre una pestanya de comparació (*Diff View*). 
+
+En aquesta vista es mostra l'estat exacte del fitxer en aquell punt del temps, ressaltant en **verd** les línies inserides (`enps08` i `dhcp4: true`)
+
+![Inspecció de canvis en verd del quart commit](/Projecte-4/Tasca02/img/config_yaml2.png)
+
+![Inspecció](/Projecte-4/Tasca02/img/revert_result.png)
+
+### 4. Eliminació del darrer commit amb `git reset`
+
+Finalment, per provar l'eliminació destructiva de l'últim commit (el commit de *revert*)
+
+![Execució de git reset](/Projecte-4/Tasca02/img/reset.png)
+
+![Execució de git reset](/Projecte-4/Tasca02/img/sure_reset.png)
+
+**Resultat observat:**
+![Execució de git reset --hard HEAD~1 i comprovació final](/Projecte-4/Tasca02/img/reset_result.png)
