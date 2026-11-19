@@ -206,3 +206,34 @@ sudo lvcreate -L 2G -s -n lv_snapshot /dev/vg_practica/lvm_dades /dev/sde
 
 ---
 
+## Fase 4: Escalabilitat i Ampliació en Calent
+
+Quan un volum es queda sense espai lliure, LVM permet fer-lo créixer aprofitant la capacitat disponible del grup de volums sense necessitat de desmuntar el directori ni aturar l'activitat dels usuaris.
+
+1. **Verificació de l'espai disponible al grup:**
+   Consulta la columna `VFree` per assegurar-te que hi ha prou gigabytes lliures:
+
+   ```bash
+   sudo vgs
+   ```
+
+   ![vgs](/Tasca04/img/vgs.png)
+
+2. **Ampliació del volum i del sistema de fitxers:**
+   Incrementa la capacitat de `lvm_dades` en **4 GB** addicionals (passant de 5 GB a 9 GB). L'ús del paràmetre `-r` (`--resizefs`) indica a LVM que executi automàticament l'eina `resize2fs` sobre el sistema de fitxers `ext4` de manera segura i en calent:
+
+   ```bash
+   sudo lvextend -r -L +4G /dev/vg_practica/lvm_dades
+   ```
+
+   ![extend](/Tasca04/img/extend.png)
+
+3. **Validació final:**
+   Confirma que el sistema operatiu reconeix la nova mida total de 9 GB aproximadament i que els fitxers preexistents continuen accessibles:
+
+   ```bash
+   df -h /mnt/dades
+   ls -lh /mnt/dades
+   ```
+   ![final](/Tasca04/img/validacio.png)
+---
