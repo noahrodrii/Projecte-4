@@ -97,3 +97,33 @@ En aquesta primera etapa es connecten **dos discos durs de 10 GB** (`/dev/sdb` i
    ![mount](/Tasca04/img/mount.png)
 
 ---
+
+## Fase 2: Alta Disponibilitat mitjançant Volum Mirall (`lvm_mirror`)
+
+Per protegir informació crítica davant la fallada física d'un disc dur, LVM permet configurar volums en mirall (equivalent a un RAID 1 per programari). Cada bloc d'escriptura es duplica simultàniament en dos dispositius físics separats.
+
+1. **Desplegament del volum mirall:**
+   Aprofitant l'espai lliure restant a `/dev/sdb` i `/dev/sdc`, crea un volum de **3.9 GB** anomenat `lvm_mirror`. El modificador `-m 1` indica al sistema que mantingui una còpia rèplica addicional:
+
+   > (*no son 4 GB perque lvm reserva una petita part per gestió interna*)
+
+   ```bash
+   sudo lvcreate -L 3.9G -m 1 -n lvm_mirror vg_practica
+   ```
+
+   ![lvm mirror](/Tasca04/img/crear_lvm_mirror.png)
+
+2. **Formatació, muntatge i verificació d'escriptura:**
+
+   ```bash
+   sudo mkfs.ext4 /dev/vg_practica/lvm_mirror
+   sudo mkdir -p /mnt/mirror
+   sudo mount /dev/vg_practica/lvm_mirror /mnt/mirror
+   echo "Informacio redundant protegida contra fallades de maquinari" | sudo tee /mnt/mirror/seguretat.txt
+   ```
+
+   ![lvm mirror](/Tasca04/img/mkfs_lvm_mirror.png)
+
+   ![formatació etc](/Tasca04/img/formatació.png)
+
+---
