@@ -8,13 +8,14 @@ Aquesta guia detalla el procediment complet per configurar, administrar, protegi
 
 Per dur a terme aquesta implementació sobre **Zorin OS**, cal disposar d'una màquina virtual amb accés a terminal (`sudo`) i incorporar els discos virtuals necessaris des del programari de virtualització (VirtualBox o VMware).
 
-![Discos en virtualbox](/Projecte-4/Tasca04/img/crea_disc.png)
+![Discos en virtualbox](/Tasca04/img/crea_disc.png)
 
-![Discos en virtualbox](/Projecte-4/Tasca04/img/discos_totals.png)
+![Discos totals](/Tasca04/img/discos_totals.png)
 
 
 1. **Instal·lació de les utilitats LVM:**
    Obre el terminal i instal·la el paquet d'administració `lvm2`:
+
    ```bash
    sudo apt update && sudo apt install lvm2 -y
    ```
@@ -25,10 +26,12 @@ Per dur a terme aquesta implementació sobre **Zorin OS**, cal disposar d'una m�
 
 2. **Identificació dels dispositius de bloc:**
    Abans de manipular discos, verifica quins noms els ha assignat el sistema per evitar tocar el disc principal del sistema operatiu (`/dev/sda`):
+
    ```bash
    lsblk
    ```
-   ![check discos](/Projecte-4/Tasca04/img/lsblk.png)
+
+   ![lsblk](/Tasca04/img/lsblk.png)
 
 ---
 
@@ -39,16 +42,19 @@ En aquesta primera etapa es connecten **dos discos durs de 10 GB** (`/dev/sdb` i
 ### 1.1. Inicialització dels Volums Físics i creació del Grup de Volums
 
 1. Prepara els dos discos de 10 GB perquè formin part de l'ecosistema LVM:
+
    ```bash
    sudo pvcreate /dev/sdb /dev/sdc
    ```
 
-   ![check discos](/Projecte-4/Tasca04/img/lsblk.png)
+   ![crear devs](/Tasca04/img/crea_devs.png)
    
 2. Crea un grup de volums anomenat `vg_practica` agrupant tots dos discos (generant un espai total aproximat de 20 GB):
+
    ```bash
    sudo vgcreate vg_practica /dev/sdb /dev/sdc
    ```
+
    <br>
 
    > 🔔 **Comprovació:** Executa `sudo vgs` per veure un resum de l'espai total i lliure del grup, o `sudo vgdisplay` si necessites inspeccionar els detalls tècnics interns (com la mida dels *Physical Extents*).
@@ -56,29 +62,38 @@ En aquesta primera etapa es connecten **dos discos durs de 10 GB** (`/dev/sdb` i
 ### 1.2. Creació, Formatació i Muntatge Automàtic del Volum Lògic
 
 1. Crea un primer volum lògic de **6 GB** anomenat `lv_inicial` i dota'l d'un sistema de fitxers `ext4`:
+
    ```bash
    sudo lvcreate -L 6G -n lv_inicial vg_practica
    sudo mkfs.ext4 /dev/vg_practica/lv_inicial
    ```
 
-   ![crear volum](/Projecte-4/Tasca04/img/lsblk.png)
+   ![crear volum](/Tasca04/img/lvcreate.png)
+
+   ![sistema ext4](/Tasca04/img/mkfs.png)
 
 2. Crea el directori destí i consulta l'identificador únic (**UUID**) del nou volum:
+
    ```bash
    sudo mkdir -p /mnt/inicial
    sudo blkid /dev/vg_practica/lv_inicial
    ```
 
-   ![crear directori](/Projecte-4/Tasca04/img/lsblk.png)
+   ![crear mount](/Tasca04/img/crear_mnt.png)
 
 3. Per evitar haver de muntar el volum manualment després de cada reinici, edita l'arxiu `/etc/fstab` (`sudo nano /etc/fstab`) i afegeix-hi la línia següent al final (substituint el valor del teu UUID sense cometes):
+
    ```text
    UUID=el-teu-codi-uuid-aqui  /mnt/inicial  ext4  defaults  0  2
    ```
+
 4. Aplica la configuració de muntatge immediatament i verifica que el volum està operatiu:
+
    ```bash
    sudo mount -av
    df -h /mnt/inicial
    ```
+
+   ![mount](/Tasca04/img/mount.png)
 
 ---
