@@ -33,6 +33,9 @@ Per dur a terme aquesta implementació sobre **Zorin OS**, cal disposar d'una m�
 
    ![lsblk](/Tasca04/img/lsblk.png)
 
+> 🚨 En la captura es veu 3 discos d'un 1GB cadascun, aixo es perque em vaig equivocar al principi i al tornar a fer l'activitat amb els dos discos de 10 GB s'hem va oblidar fer la captura.
+
+
 ---
 
 ## Fase 1: Configuració Inicial i Muntatge Persistent
@@ -54,6 +57,8 @@ En aquesta primera etapa es connecten **dos discos durs de 10 GB** (`/dev/sdb` i
    ```bash
    sudo vgcreate vg_practica /dev/sdb /dev/sdc
    ```
+
+   ![vgcreate](/Tasca04/img/vgcreate.png)
 
    <br>
 
@@ -86,6 +91,7 @@ En aquesta primera etapa es connecten **dos discos durs de 10 GB** (`/dev/sdb` i
    ```text
    UUID=el-teu-codi-uuid-aqui  /mnt/inicial  ext4  defaults  0  2
    ```
+   ![fcstab](/Tasca04/img/fcstab.png)
 
 4. Aplica la configuració de muntatge immediatament i verifica que el volum està operatiu:
 
@@ -97,7 +103,6 @@ En aquesta primera etapa es connecten **dos discos durs de 10 GB** (`/dev/sdb` i
    ![mount](/Tasca04/img/mount.png)
 
 ---
-
 ## Fase 2: Alta Disponibilitat mitjançant Volum Mirall (`lvm_mirror`)
 
 Per protegir informació crítica davant la fallada física d'un disc dur, LVM permet configurar volums en mirall (equivalent a un RAID 1 per programari). Cada bloc d'escriptura es duplica simultàniament en dos dispositius físics separats.
@@ -127,3 +132,77 @@ Per protegir informació crítica davant la fallada física d'un disc dur, LVM p
    ![formatació etc](/Tasca04/img/formatació.png)
 
 ---
+
+## Fase 3: Instantànies (Snapshots) i Recuperació de Dades
+
+Les instantànies capturen l'estat exacte d'un volum en un instant concret. A diferència d'una còpia tradicional, un *snapshot* es crea en segons perquè només emmagatzema els blocs que van canviant respecte a l'original (*Copy-on-Write*).
+
+### 3.1. Incorporació de nous discos i preparació de `lvm_dades`
+
+1. Connecta **dos nous discos de 10 GB** (`/dev/sdd` i `/dev/sde`), inicialitza'ls i incorpora'ls al grup existent:
+
+   ```bash
+   sudo pvcreate /dev/sdd /dev/sde
+   sudo vgextend vg_practica /dev/sdd /dev/sde
+   ```
+
+   ![nous discos](/Tasca04/img/pvcreate.png)
+
+2. Crea un volum de **5 GB** anomenat `lvm_dades` ubicant-lo específicament al primer disc nou (`/dev/sdd`), formata'l i munta'l:
+
+   ```bash
+   sudo lvcreate -L 5G -n lvm_dades vg_practica /dev/sdd
+   sudo mkfs.ext4 /dev/vg_practica/lvm_dades
+   sudo mkdir -p /mnt/dades
+   sudo mount /dev/vg_practica/lvm_dades /mnt/dades
+   ```
+   ![lvm_dades](/Tasca04/img/lvm_dades.png)
+
+3. Desa contingut real dins el volum (per exemple, una imatge descarregada de la xarxa i un fitxer de control):
+
+   ```bash
+   ls ~/Descargas
+   sudo cp ~/Descargas/nom_imatge.jpg /mnt/dades/
+   echo "Fitxer integre abans de la prova" | sudo tee /mnt/dades/control.txt
+   ls -lh /mnt/dades/
+   ```
+
+   ![contingu](/Tasca04/img/contingut.png)
+
+### 3.2. Creació de l'Snapshot (`lv_snapshot`)
+
+Utilitza el segon disc nou (`/dev/sde`) per allotjar una instantània de **2 GB** vinculada a `lvm_dades` mitjançant l'opció `-s`:
+
+```bash
+sudo lvcreate -L 2G -s -n lv_snapshot /dev/vg_practica/lvm_dades /dev/sde
+```
+
+![lv_snapshot](/Tasca04/img/snapshot.png)
+
+> 🔔 **Dimensionament:** La mida d'un snapshot sol calcular-se entre un 15% i un 30% de la mida del volum origen. Si s'omple al 100% per excessives modificacions al volum original, la instantània queda invalidada.
+
+### 3.3. Simulació de Desastre i Restauració
+
+1. **Pèrdua simulada de dades:** Esborra tots els fitxers del directori de treball:
+
+   ```bash
+   sudo rm -rf /mnt/dades/*
+   ls -la /mnt/dades
+   ```
+
+   ![rm fitxers](/Tasca04/img/remove.png)
+
+2. **Restauració des de la instantània:** Per revertir els canvis i retornar el volum al seu estat original, cal desmuntar-lo prèviament i executar l'ordre de fusió (`--merge`):
+
+   ```bash
+   sudo umount /mnt/dades
+   sudo lvconvert --merge /dev/vg_practica/lv_snapshot
+   sudo mount /dev/vg_practica/lvm_dades /mnt/dades
+   ```
+
+   ![restauració](/Tasca04/img/restaurar.png)
+
+   > ❗ **Important:** En completar-se la fusió, LVM elimina automàticament el volum `lv_snapshot`, ja que el seu contingut s'ha reintegrat dins de `lvm_dades`. Comprova amb `ls -lh /mnt/dades` que tant `mostra.png` com `control.txt` s'han recuperat intactes.
+
+---
+
