@@ -156,6 +156,7 @@ Les instantànies capturen l'estat exacte d'un volum en un instant concret. A di
    sudo mkdir -p /mnt/dades
    sudo mount /dev/vg_practica/lvm_dades /mnt/dades
    ```
+
    ![lvm_dades](/Tasca04/img/lvm_dades.png)
 
 3. Desa contingut real dins el volum (per exemple, una imatge descarregada de la xarxa i un fitxer de control):
@@ -167,19 +168,19 @@ Les instantànies capturen l'estat exacte d'un volum en un instant concret. A di
    ls -lh /mnt/dades/
    ```
 
-   ![contingu](/Tasca04/img/contingut.png)
+   ![contingut](/Tasca04/img/contingut.png)
 
 ### 3.2. Creació de l'Snapshot (`lv_snapshot`)
 
-Utilitza el segon disc nou (`/dev/sde`) per allotjar una instantània de **2 GB** vinculada a `lvm_dades` mitjançant l'opció `-s`:
+1. Utilitza el segon disc nou (`/dev/sde`) per allotjar una instantània de **2 GB** vinculada a `lvm_dades` mitjançant l'opció `-s`:
 
-```bash
-sudo lvcreate -L 2G -s -n lv_snapshot /dev/vg_practica/lvm_dades /dev/sde
-```
+   ```bash
+    sudo lvcreate -L 2G -s -n lv_snapshot /dev/vg_practica/lvm_dades /dev/sde
+   ```
 
-![lv_snapshot](/Tasca04/img/snapshot.png)
+   ![lv_snapshot](/Tasca04/img/snapshot.png)
 
-> 🔔 **Dimensionament:** La mida d'un snapshot sol calcular-se entre un 15% i un 30% de la mida del volum origen. Si s'omple al 100% per excessives modificacions al volum original, la instantània queda invalidada.
+   > 🔔 **Dimensionament:** La mida d'un snapshot sol calcular-se entre un 15% i un 30% de la mida del volum origen. Si s'omple al 100% per excessives modificacions al volum original, la instantània queda invalidada.
 
 ### 3.3. Simulació de Desastre i Restauració
 
