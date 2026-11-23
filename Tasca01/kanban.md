@@ -11,3 +11,16 @@ Enllaç al kanban
 Backlog creat amb el meu company Lucas per el projecte.
 
 <img src="/Tasca01/img/Backlog 9-11.png" width="300">
+<img src="/Tasca01/img/Backlog2 9-11.png" width="300">
+
+## Dia 10/11
+
+<img src="/Tasca01/img/10-11.png" width="500">
+
+## Dia 13/11
+
+<img src="/Tasca01/img/13-11.png" width="500">
+
+## Dia 23/11
+
+<img src="/Tasca01/img/23-11.png" width="500">
