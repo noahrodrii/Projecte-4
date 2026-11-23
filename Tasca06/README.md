@@ -1,0 +1,5 @@
+# Introducció
+
+En l'administració actual de sistemes, l'eficiència operativa i la rapidesa en la detecció d'incidències són factors clau per garantir la continuïtat del negoci. Fins ara, l'equip tècnic de Núvol Clar Serveis ha gestionat la seva infraestructura de servidors exclusivament mitjançant la línia d'ordres (CLI), un mètode potent però que pot resultar menys àgil per a la supervisió visual ràpida o la delegació de tasques rutinàries.
+
+L'objectiu d'aquest informe és avaluar i comparar diferents eines de gestió gràfica (entorns web) desplegades sobre servidors Ubuntu. Per fer-ho, el nostre equip d'assessorament tècnic ha instal·lat, configurat i posat a prova diverses solucions del mercat, analitzant-ne tant la facilitat d'ús i les funcionalitats com l'impacte en el rendiment i la seguretat. Finalment, es presenta una recomanació tècnica justificada per ajudar l'empresa a escollir l'eina que millor s'adapti a les seves necessitats operatives.

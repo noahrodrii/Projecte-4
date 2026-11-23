@@ -2,6 +2,8 @@
 
 ---
 
+## Fase 1: Individual
+
 ## 1. Instal·lació i posada en marxa
 
 Per instal·lar el gestor gràfic **Cockpit** al servidor Ubuntu Server, ens hem connectat per SSH i hem executat les següents comandes des de la terminal:
@@ -70,3 +72,7 @@ Afegirem el grup que hem creat abans
 ![edit+grup](img/edit+grup.png)
 
 > Una practica habitual es canviar la contrasenya del usuari, como es pot veure a la captura surt *set password* i *force change* son diferents eines per el canvi de contrasenya.
+
+## Fase 2: Elaboració de la comparativa i exposició final
+
+[Comparació de les dos eines](https://notebooklm.link.google/YcLAzQ42e0aA)
