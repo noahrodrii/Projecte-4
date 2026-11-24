@@ -41,7 +41,7 @@
 | **Projectes + Carpetes Usuaris (inclou `Documents` clients)** | Setmanal | Completa (*Full*) | Dissabte 01:00 h | 4 setmanes (i mensual 6 mesos) |
 | **Projectes + Carpetes Usuaris (inclou `Documents` clients)** | Diària (Dl-Dv) | Incremental | 23:00 h | 30 dies |
 
-> Per complir amb un **RPO de 4 hores** a les bases de dades i garantir un **RTO inferior a 4 hores**, l'estratègia s'adapta a la naturalesa de cada dada. Les **Bases de Dades (20 GB)** realitzen una còpia completa diària (22:00 h) i còpies **diferencials mitjançant volcat lògic consistent** (`mysqldump`/`pg_dump`) cada 4 hores (10h, 14h, 18h); això evita cadenes llargues de dependències, assegura la integritat de les dades en calent i permet una restauració molt més ràpida.
+> Per complir amb un **RPO de 4 hores** a les bases de dades i garantir un **RTO inferior a 4 hores**, l'estratègia s'adapta a la naturalesa de cada dada. Les **Bases de Dades (20 GB)** realitzen una còpia completa diària (22:00 h) i còpies **diferencials mitjançant volcat lògic consistent** cada 4 hores (10h, 14h, 18h); això evita cadenes llargues de dependències, assegura la integritat de les dades en calent i permet una restauració molt més ràpida.
 
 > Els **Projectes i les Carpetes d'Usuaris (400 GB, incloent-hi els documents redirigits dels clients)** fan una còpia completa setmanal (dissabte 01:00 h) per no saturar la xarxa en horari laboral, i incrementals diàries entre setmana (23:00 h). Seguint l'esquema **Avi-Pare-Fill (GFS)**, totes les còpies diàries i setmanals es retenen un mínim de **30 dies (4 setmanes)**, i l'última còpia completa de cada mes es conserva durant **6 mesos** per recuperar arxius esborrats per error a llarg termini.
 
