@@ -1,0 +1,5 @@
+# Introducció
+
+En el sector de la instal·lació i el manteniment industrial, la informació tècnica i administrativa és un actiu indispensable per a l'operativa diària. Muntatges i Serveis Tècnics SL gestiona actualment més de 420 GB de dades crítiques —entre plànols de projectes, bases de dades de comptabilitat i fitxers dels seus tècnics— repartides entre un servidor central Ubuntu i deu equips clients amb Windows 11.
+
+Una pèrdua accidental d'informació, una fallada de maquinari o un ciberatac podria aturar l'activitat de l'empresa i generar greus perjudicis econòmics. Per aquest motiu, l'objectiu d'aquest document és definir i estructurar una política integral de còpies de seguretat adaptada a les necessitats reals de negoci, garantint uns temps màxims de recuperació (RTO) i una pèrdua admissible de dades (RPO) inferiors a 4 hores per als sistemes crítics, així com un historial de retenció mínim d'un mes.
